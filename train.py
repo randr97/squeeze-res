@@ -1,5 +1,9 @@
+import logging
+
 import torch
 import torch.nn as nn
+
+log = logging.getLogger()
 
 
 class Train:
@@ -11,10 +15,10 @@ class Train:
         epoch,
         model,
         optimizer,
-        scheduler,
         criterion,
         train_dataloader,
-        validation_dataloader
+        validation_dataloader,
+        scheduler=None,
     ) -> None:
         self.device = device
         self.pre_epoch = pre_epoch
@@ -33,8 +37,8 @@ class Train:
     def validate(self):
         with torch.no_grad():
             correct, total, running_loss = 0, 0, 0
+            self.model.eval()
             for i, data in enumerate(self.validation_dataloader):
-                self.model.eval()
                 images, labels = data
                 images, labels = images.to(self.device), labels.to(self.device)
                 outputs = self.model(images)
@@ -45,6 +49,8 @@ class Train:
                 correct += (predicted == labels).sum()
             self.testing_loss.append(running_loss / (i + 1))
             self.testing_acc.append(100 * correct / total)
+            if self.testing_loss[-1] <= min(self.testing_loss):
+                torch.save(self.model.state_dict(), 'model.pth')
 
     def train(self):
         sum_loss, correct, total = 0, 0, 0
@@ -72,11 +78,12 @@ class Train:
             self.training_loss.append(sum_loss / (i + 1))
             self.training_acc.append(100. * correct / total)
             self.validate()
-            self.scheduler.step()
-            print("*" * 50)
-            print(
+            if self.scheduler:
+                self.scheduler.step()
+            log.info("*" * 50)
+            log.info(
                 f"Epoch : {eachepoch + 1}, "
                 f"Train Loss: {self.training_loss[-1]:.4f}, Train Acc: {self.training_acc[-1]:.4f}, "
                 f"Test Loss: {self.testing_loss[-1]:.4f},  Test Acc: {self.testing_acc[-1]:.4f}"
             )
-            print("*" * 50)
+            log.info("*" * 50)

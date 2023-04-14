@@ -66,7 +66,6 @@ class block(nn.Module):
             identity = self.identity_downsample(identity)
 
         x = out1 * x + identity
-        # x += identity
         x = self.relu(x)
         return x
 
@@ -80,7 +79,8 @@ class ResNet(nn.Module):
         )
         self.bn1 = nn.BatchNorm2d(64)
         self.relu = nn.Mish(True)
-        self.maxpool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
+        # self.maxpool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
+        self.maxpool = nn.AdaptiveAvgPool2d(1)
 
         # Essentially the entire ResNet architecture are in these 4 lines below
         self.layer1 = self._make_layer(
@@ -103,7 +103,7 @@ class ResNet(nn.Module):
         x = self.conv1(x)
         x = self.bn1(x)
         x = self.relu(x)
-        # x = self.maxpool(x)
+
         x = self.layer1(x)
         x = self.layer2(x)
         x = self.layer3(x)
@@ -119,9 +119,6 @@ class ResNet(nn.Module):
         identity_downsample = None
         layers = []
 
-        # Either if we half the input space for ex, 56x56 -> 28x28 (stride=2), or channels changes
-        # we need to adapt the Identity (skip connection) so it will be able to be added
-        # to the layer that's ahead
         if stride != 1 or self.in_channels != intermediate_channels * 2:
             identity_downsample = nn.Sequential(
                 nn.Conv2d(
@@ -133,7 +130,6 @@ class ResNet(nn.Module):
                 ),
                 nn.BatchNorm2d(intermediate_channels * 2),
             )
-
         layers.append(
             block(self.in_channels, intermediate_channels, identity_downsample, stride)
         )
@@ -150,5 +146,5 @@ class ResNet(nn.Module):
         return nn.Sequential(*layers)
 
 
-def ResNet18(img_channel=3, num_classes=10):
+def ResNetBottleNeckMISH(img_channel=3, num_classes=10):
     return ResNet(block, [1, 2, 2, 1], img_channel, num_classes)
