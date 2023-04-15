@@ -2,7 +2,7 @@
 
 Convolutional Neural Networks (CNNs) are known to perform better with deeper architectures, as they can learn more complex features. However, deep networks often suffer from the vanishing gradient problem, where the gradients become extremely small during backpropagation, leading to slow or no weight updates and poor learning. This challenge has been addressed by using Residual Networks (ResNets), which introduce skip connections that allow gradients to bypass certain layers, mitigating the vanishing gradient issue. In this study, we propose a lightweight ResNet model that has less than 5 million trainable parameters as opposed to the original implementation of ResNet-18, which had around 11 million parameters. Through hyper-parameter tuning and data augmnetation techniques, our architecture achieves an accuracy of 92.17% when trained on the CIFAR-10 dataset. Squeeze-Res is a python implementation of different Res Architecture.
 
-# Steps to train Resnet with Squeeze and exitement (92.17% and ~4.9M trainable parameters)
+# Steps to train Resnet with Squeeze and exitement (92.17% and ~4.5M trainable parameters)
 1. Open `driver.py` and check out the default args to the framework
 2. Run command
 ```
