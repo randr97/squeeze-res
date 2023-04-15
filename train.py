@@ -35,9 +35,9 @@ class Train:
         self.testing_acc = []
 
     def validate(self):
+        self.model.eval()
+        correct, total, running_loss = 0, 0, 0
         with torch.no_grad():
-            correct, total, running_loss = 0, 0, 0
-            self.model.eval()
             for i, data in enumerate(self.validation_dataloader):
                 images, labels = data
                 images, labels = images.to(self.device), labels.to(self.device)
