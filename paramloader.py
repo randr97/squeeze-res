@@ -43,7 +43,7 @@ class HyperParam:
             self.model = ResNetBottleNeckRELU().to(self.device)
         elif model == 'bottleneck_mish_resnet':
             self.model = ResNetBottleNeckMISH().to(self.device)
-        elif model == 'modified_resnet':
+        elif model == 'lightnet':
             self.model = LightNet().to(self.device)
         else:
             raise Exception("Invalid model")
