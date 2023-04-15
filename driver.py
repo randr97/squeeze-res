@@ -66,7 +66,7 @@ if __name__ == '__main__':
     parser.add_argument('--img_channel', type=int, default=3)
     parser.add_argument('--num_classes', type=int, default=10)
     parser.add_argument('--optimizer', type=str, default='sgd')
-    parser.add_argument('--model', type=str, default='classic_resnet')
+    parser.add_argument('--model', type=str, default='lightnet')
     parser.add_argument('--scheduler', type=bool, default=True)
     parser.add_argument('--device', type=str, default="cuda")
     config = parser.parse_args()
