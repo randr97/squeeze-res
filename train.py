@@ -53,8 +53,8 @@ class Train:
                 torch.save(self.model.state_dict(), 'model.pth')
 
     def train(self):
-        sum_loss, correct, total = 0, 0, 0
         for eachepoch in range(self.pre_epoch, self.epoch):
+            sum_loss, correct, total = 0, 0, 0
             self.model.train()
             for i, data in enumerate(self.train_dataloader):
                 # prepare dataset
